@@ -1,7 +1,8 @@
 var fs = require ('fs');
 var exec = require('child_process').exec;
 var http = require('http');
-var url = require('url')
+var url = require('url');
+var requestHandler = require('./requestHandler.js');
 
 /*var child = exec("mkdir /etc/httpd/conf.d/test", function(err, stdout, stderr){
 	console.log("Error:",err);
@@ -32,32 +33,6 @@ function startServer(route, handle) {
   console.log("Server has started.");
 }
 
-
-function default_route(response, postData){
-        console.log("Request handler 'start' was called.");
-        var body =      '<html>'+
-                                '<head>'+
-                                '<meta http-equiv="Content-Type" content="text/html; '+
-                                'charset=UTF-8" />'+
-                                '</head>'+
-                                '<body>'+
-                                '<form action="/upload" method="post">'+
-                                '<textarea name="text" rows="20" cols="60"></textarea>'+
-                                '<input type="submit" value="Submit text" />'+
-                                '</form>'+
-                                '</body>'+
-                                '</html>';
-        response.writeHead(200, {"Content-Type": "text/html"});
-        response.write(body);
-        response.end();
-}
-function upload(response, postData){
-        console.log("Request handler 'upload' was called");
-        response.writeHead(200, {"Content-Type": "text/plain"});
-        response.write("You've sent: " + postData);
-    response.end();
-}
-
 function route(handle, pathname, response, postData){
         console.log("about to route a request for "+pathname);
         if (typeof handle[pathname] === 'function'){
@@ -71,8 +46,9 @@ function route(handle, pathname, response, postData){
 }
 
 var handle = {};
-handle["/"] = default_route;
-handle["/start"] = default_route;
-handle["/upload"] = upload;
+handle["/"] = requestHandler.default_route;
+handle["/start"] = requestHandler.default_route;
+handle["/upload"] = requestHandler.upload;
+//handle["/favicon"] = favicon;
 
 startServer(route, handle);
