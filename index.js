@@ -75,4 +75,4 @@ handle["/"] = default_route;
 handle["/start"] = default_route;
 handle["/upload"] = upload;
 
-server.startServer(router.route, handle);
+startServer(router.route, handle);
