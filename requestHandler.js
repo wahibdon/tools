@@ -23,5 +23,5 @@ function upload(response, postData){
     response.end();
 }
 
-export.default_route = default_route;
-export.upload = upload;
+exports.default_route = default_route;
+exports.upload = upload;
