@@ -17,7 +17,7 @@
 			var elements = document.getElementsByClassName('vhost-web-config');
 			var data = {};
 			for (var i=0; i<elements.length; i++){
-				data[elements[0].name.split('-')[1]] = elements[0].value;
+				data[elements[i].name.split('-')[1]] = elements[i].value;
 			}
 			console.log(data);
 		})
