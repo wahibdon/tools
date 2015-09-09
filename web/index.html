@@ -10,18 +10,21 @@
 	window.addEventListener('load', function(){
 		//run the location checker function ever 250ms
 		setInterval(locationCheck, 250);
+		window.vhostInterval = setInterval(checkVhost, 250);
 		document.getElementById('new-vhost').addEventListener('click', function(){
 			document.getElementById('vhost-window').style.display = "block";
 		});
 		document.getElementById('save-web-vhost').addEventListener('click', function(){
 			
 			var data = {};
-			data['id'] = document.getElementsByName('vhost-web-name')[0].value;
+			data['id'] = document.getElementById('vhost-id').value;
+			data['name'] = document.getElementsByName('vhost-web-name')[0].value;
 			data['addr'] = document.getElementsByName('vhost-web-addr')[0].value;
 			data['aliases'] = getAliases('vhost-web-alias');
-			data['cms'] = checkedRadio('vhost-web-cms');
+			data['cms'] = checkedRadio('vhost-web-cms').value;
 
-			console.log(data);
+			vhost[data.name] = data;
+			vhost.dirty = true;
 		})
 	});
 
@@ -45,6 +48,12 @@
 	/*----------       App Fucntions        ---------*/
 	/*-----------------------------------------------*/
 
+	var vhost = {dirty: false};
+	function checkVhost(){
+		if (vhost.dirty == true)
+			console.log(yep);
+		vhost.dirty == false;
+	}
 
 	/*-----------------------------------------------*/
 	/*----------     Utility Fucntions      ---------*/
@@ -64,6 +73,12 @@
 			values.push(elements[i].value);
 		}
 		return values;
+	}
+	function clone(obj){
+		var copy = {}
+		for(var attr in obj){
+
+		}
 	}
 
 	</script>
@@ -137,7 +152,6 @@
 	<div id="vhost-sidebar">
 		<button class="blue" id="new-vhost">New</button>
 		<ul id="vhost-list">
-			<li>vhost 1</li>
 		</ul>
 	</div>
 
