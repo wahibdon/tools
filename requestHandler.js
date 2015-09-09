@@ -28,13 +28,11 @@ function app_html(response){
     var stream = fs.createReadStream('web/index.html');
     response.writeHead(200, {"Content-Type": "text/html"});
     stream.pipe(response);
-    response.end(); 
 }
 function router(response){
     var stream = fs.createReadStream('web/router.js');
     response.writeHead(200, {"Content-Type": "text/javascript"});
     stream.pipe(response);
-    response.end();
 }
 
 exports.default_route = default_route;
