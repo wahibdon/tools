@@ -1,3 +1,5 @@
+
+
 function default_route(response, postData){
         console.log("Request handler 'start' was called.");
         var body =      '<html>'+
@@ -17,11 +19,23 @@ function default_route(response, postData){
         response.end();
 }
 function upload(response, postData){
-        console.log("Request handler 'upload' was called");
-        response.writeHead(200, {"Content-Type": "text/plain"});
-        response.write("You've sent: " + postData);
+    console.log("Request handler 'upload' was called");
+    response.writeHead(200, {"Content-Type": "text/plain"});
+    response.write("You've sent: " + postData);
+    response.end();
+}
+function app_html(response){
+    var stream = fs.createReadStream('web/index.html');
+    response.pipe(stream);
+    response.end(); 
+}
+function router(response){
+    var stream = fs.createReadStream('web/router.js');
+    response.pipe(stream);
     response.end();
 }
 
 exports.default_route = default_route;
 exports.upload = upload;
+exports.app_html = app_html;
+exports.router = router;

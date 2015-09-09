@@ -14,9 +14,9 @@ var requestHandler = require('./requestHandler.js');
 function startServer(route, handle) {
   function onRequest(request, response) {
         var postData = "";
-    var pathname = url.parse(request.url).pathname;
-    console.log("Request for " + pathname + " received.");
-    request.setEncoding("utf8");
+	    var pathname = url.parse(request.url).pathname;
+	    console.log("Request for " + pathname + " received.");
+	    request.setEncoding("utf8");
 
         request.addListener("data", function(postDataChunk) {
                 postData += postDataChunk;
@@ -49,6 +49,8 @@ var handle = {};
 handle["/"] = requestHandler.default_route;
 handle["/start"] = requestHandler.default_route;
 handle["/upload"] = requestHandler.upload;
+handle["/router.js"] = requsetHandler.router;
+handle["/app"] = requestHandler.app_html;
 //handle["/favicon"] = favicon;
 
 startServer(route, handle);
