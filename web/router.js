@@ -15,8 +15,3 @@
 			route(hash);
 		}
 	}
-	//Add things to do on page load
-	window.addEventListener('load', function(){
-		//run the location checker function ever 250ms
-		setInterval(locationCheck, 250);
-	});

@@ -6,6 +6,13 @@
 	<script type="text/javascript" src="router.js"></script>
 	<script type="text/javascript">
 
+	//Window finished loading event
+	window.addEventListener('load', function(){
+		//run the location checker function ever 250ms
+		setInterval(locationCheck, 250);
+
+	});
+
 	/*-----------------------------------------------*/
 	/*----------      Routing Fucntions     ---------*/
 	/*-----------------------------------------------*/
@@ -31,9 +38,9 @@
 	* {
 		font-family: 'Roboto', sans-serif;
 		font-weight: 300;
-		padding-margin: 0;
+		padding: 0;
+		margin: 0;
    		box-sizing: border-box;
-	    border-color: cornflowerblue;
 	}
 	.blue {
 		color: #fff;
@@ -48,7 +55,7 @@
 	    bottom: 0;
 	    padding: 20px;
 	    width: 199px;
-	    border-right: 1px solid;
+	    border-right: 1px solid cornflowerblue;
 	    background-color: #eee;
 	}
 	button {
@@ -58,16 +65,33 @@
 	}
 	ul#vhost-type li.active {
 	    color: cornflowerblue;
-	    border-bottom: 3px solid;
+	    border-bottom: 3px solid cornflowerblue;
 	}
 	div#vhost-window {
 	    margin-left: 200px;
 	    padding: 20px;
+	    display: none;
 	}
 	ul#vhost-type li {
 	    display: inline-block;
 	    margin-right: 10px;
 	    cursor: pointer;
+	}
+	a#vhost-web-add-alias, a#vhost-redirect-add-alias {
+		vertical-align: middle;
+	    cursor: pointer;
+	}
+	div#vhost-web > div {
+	    margin: 10px 0;
+	}
+		div#vhost-web > div > input[type=text] {
+	    margin-right: 10px;
+	}
+	div.vhost-type{
+		display: none;
+	}
+	div.vhost-type:first-of-type{
+		display: block;
 	}
 	</style>
 </head>
@@ -86,19 +110,19 @@
 			<li class="active">Website</li>
 			<li>Redirect</li>
 		</ul>
-		<div id="vhost-web">
+		<div class="vhost-type" id="vhost-web">
 			<div><input type="hidden" name="vhost-id" value="" class="vhost-web-config"></div>
 			<div><input type="text" placeholder="Name" name="vhost-name" class="vhost-web-config"></div>
 			<div><input type="text" placeholder="Web Address" name="vhost-addr" class="vhost-web-config"></div>
-			<div><input type="text" placeholder="Alternate Name" name="vhost-alias" class="vhost-web-config"><a id="add-alias">+</a></div>
+			<div><input type="text" placeholder="Alternate Name" name="vhost-alias" class="vhost-web-config"><a id="vhost-web-add-alias">+</a></div>
 			<div><input type="radio" name="vhost-cms" vlaue="1" class="vhost-web-config"> Drupal <input type="radio" name="vhost-cms" value="2" class="vhost-web-config"> Wordpress</div>
 			<button class="blue" id="save-web-vhost">Save</button>
 		</div>
-		<div id="vhost-redirect">
+		<div class="vhost-type" id="vhost-redirect">
 			<div><input type="hidden" name="vhost-id" value="" class="vhost-redirect-config"></div>
 			<div><input type="text" placeholder="Name" name="vhost-name" class="vhost-redirect-config"></div>
 			<div><input type="text" placeholder="Web Address" name="vhost-addr" class="vhost-redirect-config"></div>
-			<div><input type="text" placeholder="Alternate Name" name="vhost-alias" class="vhost-redirect-config"><a id="add-alias">+</a></div>
+			<div><input type="text" placeholder="Alternate Name" name="vhost-alias" class="vhost-redirect-config"><a id="vhost-redirect-add-alias">+</a></div>
 			<div><input type="text" placeholder="Redirect Address" name="vhost-redirect" class="vhost-redirect-config"></div>
 			<div><input type="radio" name="vhost-redirect-type" vlaue="1" class="vhost-redirect-config"> Permanent <input type="radio" name="vhost-redirect-type" value="2" class="vhost-redirect-config"> Temporary</div>
 			<button class="blue" id="save-redirect-vhost">Save</button>
