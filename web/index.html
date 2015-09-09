@@ -4,6 +4,11 @@
 	<title>This is me attempting to make a router</title>
 	<script type="text/javascript" src="router.js"></script>
 	<script type="text/javascript">
+
+	/*-----------------------------------------------*/
+	/*----------      Routing Fucntions     ---------*/
+	/*-----------------------------------------------*/
+
 	var routes = {
 		thisFunct: window.thisFunct
 	};
@@ -14,9 +19,51 @@
 	function defaultRoute(){
 
 	}
+	//end routing
+
+	/*-----------------------------------------------*/
+	/*----------       App Fucntions        ---------*/
+	/*-----------------------------------------------*/
+
 	</script>
+	<style type="text/css">
+
+	</style>
 </head>
 <body>
+
+<div>
+	<div>
+		<button id="new-vhost">New</button>
+		<ul id="vhost-list">
+			<li>vhost 1</li>
+		</ul>
+	</div>
+
+	<div id="vhost-window">
+		<ul id="vhost-type">
+			<li>Website</li>
+			<li>Redirect</li>
+		</ul>
+		<div id="vhost-web">
+			<input type="hidden" name="vhost-id" value="" class="vhost-web-config">
+			<input type="text" placeholder="Name" name="vhost-name" class="vhost-web-config">
+			<input type="text" placeholder="Web Address" name="vhost-addr" class="vhost-web-config">
+			<input type="text" placeholder="Alternate Name" name="vhost-alias" class="vhost-web-config"><a id="add-alias">+</a>
+			<input type="radio" name="vhost-cms" vlaue="1" class="vhost-web-config"> Drupal <input type="radio" name="vhost-cms" value="2" class="vhost-web-config"> Wordpress
+			<button id="save-web-vhost">Save</button>
+		</div>
+		<div id="vhost-redirect">
+			<input type="hidden" name="vhost-id" value="" class="vhost-redirect-config">
+			<input type="text" placeholder="Name" name="vhost-name" class="vhost-redirect-config">
+			<input type="text" placeholder="Web Address" name="vhost-addr" class="vhost-redirect-config">
+			<input type="text" placeholder="Alternate Name" name="vhost-alias" class="vhost-redirect-config"><a id="add-alias">+</a>
+			<input type="text" placeholder="Redirect Address" name="vhost-redirect" class="vhost-redirect-config">
+			<input type="radio" name="vhost-redirect-type" vlaue="1" class="vhost-redirect-config"> Permanent <input type="radio" name="vhost-redirect-type" value="2" class="vhost-redirect-config"> Temporary
+			<button id="save-redirect-vhost">Save</button>
+		</div>
+	</div>
+</div>
 
 </body>
 </html>
