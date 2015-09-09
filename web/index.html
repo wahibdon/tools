@@ -31,14 +31,51 @@
 	* {
 		font-family: 'Roboto', sans-serif;
 		font-weight: 300;
+		padding-margin: 0;
+   		box-sizing: border-box;
+	    border-color: cornflowerblue;
+	}
+	.blue {
+		color: #fff;
+	    background-color: cornflowerblue;
+	}
+	ul li{
+		list-style-type: none;
+	}
+	div#vhost-sidebar {
+		position: fixed;
+	    top: 0;
+	    bottom: 0;
+	    padding: 20px;
+	    width: 199px;
+	    border-right: 1px solid;
+	    background-color: #eee;
+	}
+	button {
+	    border: 0;
+	    padding: 4px 8px;
+	    border-radius: 3px;
+	}
+	ul#vhost-type li.active {
+	    color: cornflowerblue;
+	    border-bottom: 3px solid;
+	}
+	div#vhost-window {
+	    margin-left: 200px;
+	    padding: 20px;
+	}
+	ul#vhost-type li {
+	    display: inline-block;
+	    margin-right: 10px;
+	    cursor: pointer;
 	}
 	</style>
 </head>
 <body>
 
 <div>
-	<div>
-		<button id="new-vhost">New</button>
+	<div id="vhost-sidebar">
+		<button class="blue" id="new-vhost">New</button>
 		<ul id="vhost-list">
 			<li>vhost 1</li>
 		</ul>
@@ -46,25 +83,25 @@
 
 	<div id="vhost-window">
 		<ul id="vhost-type">
-			<li>Website</li>
+			<li class="active">Website</li>
 			<li>Redirect</li>
 		</ul>
 		<div id="vhost-web">
-			<input type="hidden" name="vhost-id" value="" class="vhost-web-config">
-			<input type="text" placeholder="Name" name="vhost-name" class="vhost-web-config">
-			<input type="text" placeholder="Web Address" name="vhost-addr" class="vhost-web-config">
-			<input type="text" placeholder="Alternate Name" name="vhost-alias" class="vhost-web-config"><a id="add-alias">+</a>
-			<input type="radio" name="vhost-cms" vlaue="1" class="vhost-web-config"> Drupal <input type="radio" name="vhost-cms" value="2" class="vhost-web-config"> Wordpress
-			<button id="save-web-vhost">Save</button>
+			<div><input type="hidden" name="vhost-id" value="" class="vhost-web-config"></div>
+			<div><input type="text" placeholder="Name" name="vhost-name" class="vhost-web-config"></div>
+			<div><input type="text" placeholder="Web Address" name="vhost-addr" class="vhost-web-config"></div>
+			<div><input type="text" placeholder="Alternate Name" name="vhost-alias" class="vhost-web-config"><a id="add-alias">+</a></div>
+			<div><input type="radio" name="vhost-cms" vlaue="1" class="vhost-web-config"> Drupal <input type="radio" name="vhost-cms" value="2" class="vhost-web-config"> Wordpress</div>
+			<button class="blue" id="save-web-vhost">Save</button>
 		</div>
 		<div id="vhost-redirect">
-			<input type="hidden" name="vhost-id" value="" class="vhost-redirect-config">
-			<input type="text" placeholder="Name" name="vhost-name" class="vhost-redirect-config">
-			<input type="text" placeholder="Web Address" name="vhost-addr" class="vhost-redirect-config">
-			<input type="text" placeholder="Alternate Name" name="vhost-alias" class="vhost-redirect-config"><a id="add-alias">+</a>
-			<input type="text" placeholder="Redirect Address" name="vhost-redirect" class="vhost-redirect-config">
-			<input type="radio" name="vhost-redirect-type" vlaue="1" class="vhost-redirect-config"> Permanent <input type="radio" name="vhost-redirect-type" value="2" class="vhost-redirect-config"> Temporary
-			<button id="save-redirect-vhost">Save</button>
+			<div><input type="hidden" name="vhost-id" value="" class="vhost-redirect-config"></div>
+			<div><input type="text" placeholder="Name" name="vhost-name" class="vhost-redirect-config"></div>
+			<div><input type="text" placeholder="Web Address" name="vhost-addr" class="vhost-redirect-config"></div>
+			<div><input type="text" placeholder="Alternate Name" name="vhost-alias" class="vhost-redirect-config"><a id="add-alias">+</a></div>
+			<div><input type="text" placeholder="Redirect Address" name="vhost-redirect" class="vhost-redirect-config"></div>
+			<div><input type="radio" name="vhost-redirect-type" vlaue="1" class="vhost-redirect-config"> Permanent <input type="radio" name="vhost-redirect-type" value="2" class="vhost-redirect-config"> Temporary</div>
+			<button class="blue" id="save-redirect-vhost">Save</button>
 		</div>
 	</div>
 </div>
