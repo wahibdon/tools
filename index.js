@@ -49,7 +49,7 @@ var handle = {};
 handle["/"] = requestHandler.default_route;
 handle["/start"] = requestHandler.default_route;
 handle["/upload"] = requestHandler.upload;
-handle["/router.js"] = requsetHandler.router;
+handle["/router.js"] = requestHandler.router;
 handle["/app"] = requestHandler.app_html;
 //handle["/favicon"] = favicon;
 
