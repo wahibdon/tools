@@ -10,7 +10,17 @@
 	window.addEventListener('load', function(){
 		//run the location checker function ever 250ms
 		setInterval(locationCheck, 250);
-
+		document.getElementById('new-vhost').addEventListener('click', function(){
+			document.getElementById('vhost-window').style.display = "block";
+		});
+		document.getElementById('save-web-vhost').addEventListener('click', function(){
+			var elements = document.getElementsByClassName('vhost-web-config');
+			var data = {};
+			console.log(elements);
+			for (var i=0; i<elements.length; i++){
+				
+			}
+		})
 	});
 
 	/*-----------------------------------------------*/
@@ -35,64 +45,67 @@
 
 	</script>
 	<style type="text/css">
-	* {
-		font-family: 'Roboto', sans-serif;
-		font-weight: 300;
-		padding: 0;
-		margin: 0;
-   		box-sizing: border-box;
-	}
-	.blue {
-		color: #fff;
-	    background-color: cornflowerblue;
-	}
-	ul li{
-		list-style-type: none;
-	}
-	div#vhost-sidebar {
-		position: fixed;
-	    top: 0;
-	    bottom: 0;
-	    padding: 20px;
-	    width: 199px;
-	    border-right: 1px solid cornflowerblue;
-	    background-color: #eee;
-	}
-	button {
-	    border: 0;
-	    padding: 4px 8px;
-	    border-radius: 3px;
-	}
-	ul#vhost-type li.active {
-	    color: cornflowerblue;
-	    border-bottom: 3px solid cornflowerblue;
-	}
-	div#vhost-window {
-	    margin-left: 200px;
-	    padding: 20px;
-	    display: none;
-	}
-	ul#vhost-type li {
-	    display: inline-block;
-	    margin-right: 10px;
-	    cursor: pointer;
-	}
-	a#vhost-web-add-alias, a#vhost-redirect-add-alias {
-		vertical-align: middle;
-	    cursor: pointer;
-	}
-	div#vhost-web > div {
-	    margin: 10px 0;
-	}
-		div#vhost-web > div > input[type=text] {
-	    margin-right: 10px;
-	}
-	div.vhost-type{
-		display: none;
-	}
-	div.vhost-type:first-of-type{
-		display: block;
-	}
+		* {
+			font-family: 'Roboto', sans-serif;
+			font-weight: 300;
+			padding: 0;
+			margin: 0;
+	   		box-sizing: border-box;
+		}
+		.blue {
+			color: #fff;
+		    background-color: cornflowerblue;
+		}
+		ul li{
+			list-style-type: none;
+		}
+		div#vhost-sidebar {
+			position: fixed;
+		    top: 0;
+		    bottom: 0;
+		    padding: 20px;
+		    width: 199px;
+		    border-right: 1px solid cornflowerblue;
+		    background-color: #eee;
+		}
+		button {
+		    border: 0;
+		    padding: 4px 8px;
+		    border-radius: 3px;
+		}
+		ul#vhost-type li.active {
+		    color: cornflowerblue;
+		    border-bottom: 3px solid cornflowerblue;
+		}
+		div#vhost-window {
+		    margin-left: 200px;
+		    padding: 20px;
+		    display: none;
+		}
+		ul#vhost-type li {
+		    display: inline-block;
+		    margin-right: 10px;
+		    cursor: pointer;
+		}
+		a#vhost-web-add-alias, a#vhost-redirect-add-alias {
+			vertical-align: middle;
+		    cursor: pointer;
+		}
+		div#vhost-web > div {
+		    margin: 10px 0;
+		}
+			div#vhost-web > div > input[type=text] {
+		    margin-right: 10px;
+		}
+		div.vhost-type{
+			display: none;
+		}
+		div.vhost-type:first-of-type{
+			display: block;
+		}
+		div#vhost-list li {
+			cursor: pointer;
+		}
 	</style>
 </head>
 <body>
@@ -111,7 +124,7 @@
 			<li>Redirect</li>
 		</ul>
 		<div class="vhost-type" id="vhost-web">
-			<div><input type="hidden" name="vhost-id" value="" class="vhost-web-config"></div>
+			<input type="hidden" name="vhost-id" value="" class="vhost-web-config">
 			<div><input type="text" placeholder="Name" name="vhost-name" class="vhost-web-config"></div>
 			<div><input type="text" placeholder="Web Address" name="vhost-addr" class="vhost-web-config"></div>
 			<div><input type="text" placeholder="Alternate Name" name="vhost-alias" class="vhost-web-config"><a id="vhost-web-add-alias">+</a></div>
@@ -119,7 +132,7 @@
 			<button class="blue" id="save-web-vhost">Save</button>
 		</div>
 		<div class="vhost-type" id="vhost-redirect">
-			<div><input type="hidden" name="vhost-id" value="" class="vhost-redirect-config"></div>
+			<input type="hidden" name="vhost-id" value="" class="vhost-redirect-config">
 			<div><input type="text" placeholder="Name" name="vhost-name" class="vhost-redirect-config"></div>
 			<div><input type="text" placeholder="Web Address" name="vhost-addr" class="vhost-redirect-config"></div>
 			<div><input type="text" placeholder="Alternate Name" name="vhost-alias" class="vhost-redirect-config"><a id="vhost-redirect-add-alias">+</a></div>
