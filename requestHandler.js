@@ -1,4 +1,4 @@
-
+var fs = require ('fs');
 
 function default_route(response, postData){
         console.log("Request handler 'start' was called.");
