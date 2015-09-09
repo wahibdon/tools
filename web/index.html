@@ -14,11 +14,13 @@
 			document.getElementById('vhost-window').style.display = "block";
 		});
 		document.getElementById('save-web-vhost').addEventListener('click', function(){
-			var elements = document.getElementsByClassName('vhost-web-config');
+			
 			var data = {};
-			for (var i=0; i<elements.length; i++){
-				data[elements[i].name.split('-')[1]] = document.getElementById('vhost-web').getElementsByName(elements[i].name);
-			}
+			data['id'] = document.getElementsByName('vhost-web-name')[0].value;
+			data['addr'] = document.getElementsByName('vhost-web-addr')[0].value;
+			data['aliases'] = getAliases('vhost-web-alias');
+			data['cms'] = checkedRadio('vhost-web-cms');
+
 			console.log(data);
 		})
 	});
@@ -42,6 +44,27 @@
 	/*-----------------------------------------------*/
 	/*----------       App Fucntions        ---------*/
 	/*-----------------------------------------------*/
+
+
+	/*-----------------------------------------------*/
+	/*----------     Utility Fucntions      ---------*/
+	/*-----------------------------------------------*/
+
+	function checkedRadio(name){
+		var elements = document.getElementsByName(name);
+		for (var i=0; i<elements.length; i++){
+			if(elements[i].checked)
+				return elements[i];
+		}
+	}
+	function getAliases(name){
+		var elements = document.getElementsByName(name);
+		var values = [];
+		for (var i = 0; i < elements.length; i++) {
+			values.push(elements[i].value);
+		}
+		return values;
+	}
 
 	</script>
 	<style type="text/css">
@@ -123,20 +146,19 @@
 			<li class="active">Website</li>
 			<li>Redirect</li>
 		</ul>
+		<input type="hidden" id="vhost-id" value="">
 		<div class="vhost-type" id="vhost-web">
-			<input type="hidden" name="vhost-id" value="" class="vhost-web-config">
-			<div><input type="text" placeholder="Name" name="vhost-name" class="vhost-web-config"></div>
-			<div><input type="text" placeholder="Web Address" name="vhost-addr" class="vhost-web-config"></div>
-			<div><input type="text" placeholder="Alternate Name" name="vhost-alias" class="vhost-web-config"><a id="vhost-web-add-alias">+</a></div>
-			<div><input type="radio" name="vhost-cms" vlaue="1" class="vhost-web-config"> Drupal <input type="radio" name="vhost-cms" value="2" class="vhost-web-config"> Wordpress</div>
+			<div><input type="text" placeholder="Name" name="vhost-web-name" class="vhost-web-config"></div>
+			<div><input type="text" placeholder="Web Address" name="vhost-web-addr" class="vhost-web-config"></div>
+			<div><input type="text" placeholder="Alternate Name" name="vhost-web-alias" class="vhost-web-config"><a id="vhost-web-add-alias">+</a></div>
+			<div><input type="radio" name="vhost-web-cms" vlaue="1" class="vhost-web-config"> Drupal <input type="radio" name="vhost-web-cms" value="2" class="vhost-web-config"> Wordpress</div>
 			<button class="blue" id="save-web-vhost">Save</button>
 		</div>
 		<div class="vhost-type" id="vhost-redirect">
-			<input type="hidden" name="vhost-id" value="" class="vhost-redirect-config">
-			<div><input type="text" placeholder="Name" name="vhost-name" class="vhost-redirect-config"></div>
-			<div><input type="text" placeholder="Web Address" name="vhost-addr" class="vhost-redirect-config"></div>
-			<div><input type="text" placeholder="Alternate Name" name="vhost-alias" class="vhost-redirect-config"><a id="vhost-redirect-add-alias">+</a></div>
-			<div><input type="text" placeholder="Redirect Address" name="vhost-redirect" class="vhost-redirect-config"></div>
+			<div><input type="text" placeholder="Name" name="vhost-redirect-name" class="vhost-redirect-config"></div>
+			<div><input type="text" placeholder="Web Address" name="vhost-redirect-addr" class="vhost-redirect-config"></div>
+			<div><input type="text" placeholder="Alternate Name" name="vhost-redirect-alias" class="vhost-redirect-config"><a id="vhost-redirect-add-alias">+</a></div>
+			<div><input type="text" placeholder="Redirect Address" name="vhost-redirect-redirect" class="vhost-redirect-config"></div>
 			<div><input type="radio" name="vhost-redirect-type" vlaue="1" class="vhost-redirect-config"> Permanent <input type="radio" name="vhost-redirect-type" value="2" class="vhost-redirect-config"> Temporary</div>
 			<button class="blue" id="save-redirect-vhost">Save</button>
 		</div>
