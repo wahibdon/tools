@@ -26,12 +26,12 @@ function upload(response, postData){
 }
 function app_html(response){
     var stream = fs.createReadStream('web/index.html');
-    response.pipe(stream);
+    stream.pipe(response);
     response.end(); 
 }
 function router(response){
     var stream = fs.createReadStream('web/router.js');
-    response.pipe(stream);
+    stream.pipe(response);
     response.end();
 }
 
