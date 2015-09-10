@@ -14,19 +14,57 @@
 		document.getElementById('new-vhost').addEventListener('click', function(){
 			document.getElementById('vhost-window').style.display = "block";
 		});
-		document.getElementById('save-web-vhost').addEventListener('click', function(){
+		document.getElementById('save-web-vhost').addEventListener('click', function(e){
 			
 			var data = {};
-			data['id'] = document.getElementById('vhost-id').value;
+			data['id'] = (document.getElementById('vhost-id').value) ? document.getElementById('vhost-id').value : vhost.ai;
+			data['kind'] = e.target.value;
 			data['name'] = document.getElementsByName('vhost-web-name')[0].value;
 			data['addr'] = document.getElementsByName('vhost-web-addr')[0].value;
 			data['aliases'] = getAliases('vhost-web-alias');
-			data['cms'] = checkedRadio('vhost-web-cms').value;
+			data['cms'] = checkedRadio('vhost-web-cms');
 
-			vhost[data.name] = data;
+			vhost.list[data.id] = data;
 			vhost.dirty = true;
-		})
-	});
+			vhost.ai++;
+			formElementsReset();
+			removeExtraAliases('vhost-web-alias');
+			document.getElementById('vhost-window').style.display = "none";
+		});
+		document.getElementById('save-redirect-vhost').addEventListener('click', function(e){
+			
+			var data = {};
+			data['id'] = (document.getElementById('vhost-id').value) ? document.getElementById('vhost-id').value : vhost.ai;
+			data['kind'] = e.target.value;
+			data['name'] = document.getElementsByName('vhost-redirect-name')[0].value;
+			data['addr'] = document.getElementsByName('vhost-redirect-addr')[0].value;
+			data['redirect'] = document.getElementsByName('vhost-redirect-redirect')[0].value;
+			data['aliases'] = getAliases('vhost-redirect-alias');
+			data['type'] = checkedRadio('vhost-redirect-type');
+
+			if (typeof vhost.list[data.id] == "undefined")
+				vhost.ai++;
+
+			vhost.list[data.id] = data;
+			vhost.dirty = true;
+			formElementsReset();
+			removeExtraAliases('vhost-redirect-alias');
+			document.getElementById('vhost-window').style.display = "none";
+		});
+		var tabs = document.getElementById('vhost-type').getElementsByTagName('li');
+		for(var i=0; i<tabs.length; i++){
+			tabs[i].addEventListener('click', switchTabs);
+		}
+		var add_aliases = document.getElementsByClassName('add-alias');
+		for(var i=0; i<add_aliases.length; i++)
+			add_aliases[i].addEventListener('click', function(e){
+				var elem = e.target;
+				var elem_clone = elem.parentNode.cloneNode(true);
+				elem_clone.removeChild(elem_clone.lastChild);
+				elem.parentNode.parentNode.insertBefore(elem_clone, elem.parentNode);
+				elem.value = "";
+			});
+	});	
 
 	/*-----------------------------------------------*/
 	/*----------      Routing Fucntions     ---------*/
@@ -48,11 +86,65 @@
 	/*----------       App Fucntions        ---------*/
 	/*-----------------------------------------------*/
 
-	var vhost = {dirty: false};
+	var vhost = {
+		dirty: false,
+		ai: 0,
+		list: []
+	};
+	function switchTabs(e){
+		var elem = e.target || document.querySelectorAll('[data-id='+e+']')[0];
+		
+
+		var tabs = elem.parentNode.getElementsByTagName('li');
+		var forms = document.getElementsByClassName('vhost-type');
+		for(var i=0; i<tabs.length; i++){
+			tabs[i].classList.remove('active');
+			forms[i].style.display = "none";
+		}
+		elem.classList.add('active');
+		document.getElementById(elem.dataset.id).style.display = "block";
+	}
 	function checkVhost(){
 		if (vhost.dirty == true)
-			console.log('yep');
+			updateVhost();
 		vhost.dirty = false;
+	}
+	function updateVhost(){
+		var vhost_list = document.getElementById('vhost-list');
+		emptyNode(vhost_list);
+		var li;
+		for (var i=0; i<vhost.list.length; i++){
+			li = document.createElement('li');
+			li.appendChild(document.createTextNode(vhost.list[i].name));
+			li.dataset.id = vhost.list[i].id;
+			li.addEventListener('click', function(e){
+				var data = vhost.list[e.target.dataset.id];
+				var kind = data.kind;
+				document.getElementById('vhost-id').value = data['id']; 
+				document.getElementsByName('vhost-'+kind+'-name')[0].value = data['name'];
+				document.getElementsByName('vhost-'+kind+'-addr')[0].value = data['addr'];
+				if (typeof data.redirect != undefined)
+					document.getElementsByName('vhost-redirect-redirect')[0].value = data.redirect;
+				setAliases('vhost-'+kind+'-alias', data['aliases']);
+				if(kind == "web")
+					setRadio('vhost-'+kind+'-cms', data['cms']);
+				else
+					setRadio('vhost-'+kind+'-type', data['type']);
+				document.getElementById('vhost-window').style.display = "block";
+				switchTabs('vhost-'+kind);
+			});
+			li.addEventListener('contextmenu', function(e){
+				e.preventDefault();
+			})
+			vhost_list.appendChild(li);
+		}
+	}
+	function removeExtraAliases(name){
+		var inputs = document.getElementsByName(name);
+		var length = inputs.length;
+		for(var i=0; i<length-1; i++){
+			inputs[0].parentNode.parentNode.removeChild(inputs[0].parentNode);
+		}
 	}
 
 	/*-----------------------------------------------*/
@@ -63,7 +155,17 @@
 		var elements = document.getElementsByName(name);
 		for (var i=0; i<elements.length; i++){
 			if(elements[i].checked)
-				return elements[i];
+				return elements[i].value;
+		}
+		return 0;
+	}
+	function setRadio(name, value){
+		var elements = document.getElementsByName(name);
+		for (var i=0; i<elements.length; i++){
+			if(elements[i].value == value){
+				elements[i].checked = true;
+				return;
+			}
 		}
 	}
 	function getAliases(name){
@@ -74,10 +176,35 @@
 		}
 		return values;
 	}
-	function clone(obj){
-		var copy = {}
-		for(var attr in obj){
-
+	function setAliases(name, values){
+		var elements = document.getElementsByName(name);
+		var dupNode;
+		while (elements.length < values.length){
+			dupNode = elements[0].clone(deep);
+			elements[0].parentNode.appendChild(dupNode);
+		}
+		for (var i=0; i<values.length; i++)
+			elements[i].value = values[i];
+	}
+	function emptyNode(node){
+		while(node.lastChild)
+			node.removeChild(node.lastChild);
+	}
+	function formElementsReset(){
+		var inputs = document.getElementsByTagName('input');
+		for (var i=0; i<inputs.length; i++){
+			switch (inputs[i].type){
+				case 'text':
+				case 'hidden':
+					inputs[i].value = "";
+					break;
+				case 'radio':
+				case 'checkbox':
+					inputs[i].checked = false;
+					break;
+				default:
+					break;
+			}
 		}
 	}
 
@@ -129,20 +256,32 @@
 			vertical-align: middle;
 		    cursor: pointer;
 		}
-		div#vhost-web > div {
+		div.vhost-type > div {
 		    margin: 10px 0;
 		}
-			div#vhost-web > div > input[type=text] {
+		div.vhost-type > div > input[type=text] {
 		    margin-right: 10px;
 		}
 		div.vhost-type{
 			display: none;
+			font-size: 11px;
 		}
 		div.vhost-type:first-of-type{
 			display: block;
 		}
-		div#vhost-list li {
+		ul#vhost-list li {
 			cursor: pointer;
+		}
+		input {
+		    border-color: #eee;
+		}
+		input, button {
+		    border-width: 1px;
+		    border-style: solid;
+		}
+		button:focus, input:focus {
+		    outline-style: none;
+		    border-color: slateblue;
 		}
 	</style>
 </head>
@@ -157,24 +296,24 @@
 
 	<div id="vhost-window">
 		<ul id="vhost-type">
-			<li class="active">Website</li>
-			<li>Redirect</li>
+			<li data-id="vhost-web" class="active">Website</li>
+			<li data-id="vhost-redirect">Redirect</li>
 		</ul>
 		<input type="hidden" id="vhost-id" value="">
 		<div class="vhost-type" id="vhost-web">
 			<div><input type="text" placeholder="Name" name="vhost-web-name" class="vhost-web-config"></div>
 			<div><input type="text" placeholder="Web Address" name="vhost-web-addr" class="vhost-web-config"></div>
-			<div><input type="text" placeholder="Alternate Name" name="vhost-web-alias" class="vhost-web-config"><a id="vhost-web-add-alias">+</a></div>
+			<div><input type="text" placeholder="Alternate Name" name="vhost-web-alias" class="vhost-web-config"><a id="vhost-web-add-alias" class="add-alias">+</a></div>
 			<div><input type="radio" name="vhost-web-cms" vlaue="1" class="vhost-web-config"> Drupal <input type="radio" name="vhost-web-cms" value="2" class="vhost-web-config"> Wordpress</div>
-			<button class="blue" id="save-web-vhost">Save</button>
+			<button class="blue" id="save-web-vhost" value="web">Save</button>
 		</div>
 		<div class="vhost-type" id="vhost-redirect">
 			<div><input type="text" placeholder="Name" name="vhost-redirect-name" class="vhost-redirect-config"></div>
 			<div><input type="text" placeholder="Web Address" name="vhost-redirect-addr" class="vhost-redirect-config"></div>
-			<div><input type="text" placeholder="Alternate Name" name="vhost-redirect-alias" class="vhost-redirect-config"><a id="vhost-redirect-add-alias">+</a></div>
+			<div><input type="text" placeholder="Alternate Name" name="vhost-redirect-alias" class="vhost-redirect-config"><a id="vhost-redirect-add-alias" class="add-alias">+</a></div>
 			<div><input type="text" placeholder="Redirect Address" name="vhost-redirect-redirect" class="vhost-redirect-config"></div>
 			<div><input type="radio" name="vhost-redirect-type" vlaue="1" class="vhost-redirect-config"> Permanent <input type="radio" name="vhost-redirect-type" value="2" class="vhost-redirect-config"> Temporary</div>
-			<button class="blue" id="save-redirect-vhost">Save</button>
+			<button class="blue" id="save-redirect-vhost" value="redirect">Save</button>
 		</div>
 	</div>
 </div>
