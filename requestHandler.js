@@ -55,7 +55,8 @@ function loadingGif(response){
 }
 function vhost_list(response, postData){
     response.writeHead(200, {"Content-Type": "application/json"});
-    response.end(JSON.sringify(db('web_host')));
+    response.write(JSON.sringify(db('web_host')));
+    response.end();
 }
 
 exports.default_route = default_route;
