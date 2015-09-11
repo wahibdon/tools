@@ -51,6 +51,7 @@ handle["/start"] = requestHandler.default_route;
 handle["/upload"] = requestHandler.upload;
 handle["/router.js"] = requestHandler.router;
 handle["/app"] = requestHandler.app_html;
+handle["/vhost-list"] = requestHandler.vhost_list;
 //handle["/favicon"] = favicon;
 
 startServer(route, handle);

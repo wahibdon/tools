@@ -1,4 +1,20 @@
 var fs = require ('fs');
+var db = require ('knex')({
+        client: 'mysql',
+        connection: {
+            host: 'localhost',
+            user: 'tools_app',
+            password: 't00LsApp',
+            database: 'web_tools',
+            port: '3306'
+        }
+    });
+
+function webAsset(response, name, mime){
+    var stream = fs.createReadStream('web/'+name);
+    response.writeHead(200, {"Content-Type": mime});
+    stream.pipe(response);
+}
 
 function default_route(response, postData){
         console.log("Request handler 'start' was called.");
@@ -30,12 +46,21 @@ function app_html(response){
     stream.pipe(response);
 }
 function router(response){
-    var stream = fs.createReadStream('web/router.js');
-    response.writeHead(200, {"Content-Type": "text/javascript"});
+    webAsset(response, "router.js", "text/javascript");
+}
+function loadingGif(response){
+    var stream = fs.createReadStream('web/loading.gif');
+    response.writeHead(200, {"Content-Type": "image/gif"});
     stream.pipe(response);
+}
+function vhost_list(response, postData){
+    response.writeHead(200, {"Content-Type": "application/json"});
+    response.end(JSON.sringify(db('web_host')));
 }
 
 exports.default_route = default_route;
 exports.upload = upload;
 exports.app_html = app_html;
 exports.router = router;
+exports.loadingGif = loadingGif;
+exports.vhost_list = vhost_list;

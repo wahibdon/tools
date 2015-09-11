@@ -17,16 +17,21 @@
 		document.getElementById('save-web-vhost').addEventListener('click', function(e){
 			
 			var data = {};
-			data['id'] = (document.getElementById('vhost-id').value) ? document.getElementById('vhost-id').value : vhost.ai;
+			data['id'] = (document.getElementById('vhost-id').value) ? document.getElementById('vhost-id').value-0 : vhost.ai;
 			data['kind'] = e.target.value;
 			data['name'] = document.getElementsByName('vhost-web-name')[0].value;
 			data['addr'] = document.getElementsByName('vhost-web-addr')[0].value;
 			data['aliases'] = getAliases('vhost-web-alias');
 			data['cms'] = checkedRadio('vhost-web-cms');
 
-			vhost.list[data.id] = data;
+			if (typeof vhost.list[data.id] == "undefined"){
+				vhost.list[data.id] = data;
+				vhost.ai++;
+			}else{
+				vhost.list[data.id] = data;
+			}
+
 			vhost.dirty = true;
-			vhost.ai++;
 			formElementsReset();
 			removeExtraAliases('vhost-web-alias');
 			document.getElementById('vhost-window').style.display = "none";
@@ -34,7 +39,7 @@
 		document.getElementById('save-redirect-vhost').addEventListener('click', function(e){
 			
 			var data = {};
-			data['id'] = (document.getElementById('vhost-id').value) ? document.getElementById('vhost-id').value : vhost.ai;
+			data['id'] = (document.getElementById('vhost-id').value) ? document.getElementById('vhost-id').value-0 : vhost.ai;
 			data['kind'] = e.target.value;
 			data['name'] = document.getElementsByName('vhost-redirect-name')[0].value;
 			data['addr'] = document.getElementsByName('vhost-redirect-addr')[0].value;
@@ -42,10 +47,13 @@
 			data['aliases'] = getAliases('vhost-redirect-alias');
 			data['type'] = checkedRadio('vhost-redirect-type');
 
-			if (typeof vhost.list[data.id] == "undefined")
+			if (typeof vhost.list[data.id] == "undefined"){
+				vhost.list[data.id] = data;
 				vhost.ai++;
+			}else{
+				vhost.list[data.id] = data;
+			}
 
-			vhost.list[data.id] = data;
 			vhost.dirty = true;
 			formElementsReset();
 			removeExtraAliases('vhost-redirect-alias');
@@ -64,6 +72,17 @@
 				elem.parentNode.parentNode.insertBefore(elem_clone, elem.parentNode);
 				elem.value = "";
 			});
+		var cancel = document.getElementsByClassName('vhost-cancel');
+		for(var i=0; i<cancel.length; i++)
+			cancel[i].addEventListener('click', function(){
+				formElementsReset();
+				removeExtraAliases('vhost-redirect-alias');
+				removeExtraAliases('vhost-web-alias');
+				document.getElementById('vhost-window').style.display = "none";
+			})
+		xhr('/vhost-list', 'post', null, function(json){
+			console.log(json);
+		})
 	});	
 
 	/*-----------------------------------------------*/
@@ -118,6 +137,8 @@
 			li.appendChild(document.createTextNode(vhost.list[i].name));
 			li.dataset.id = vhost.list[i].id;
 			li.addEventListener('click', function(e){
+				if (typeof vhost.list[e.target.dataset.id] == 'undefined')
+					return;
 				var data = vhost.list[e.target.dataset.id];
 				var kind = data.kind;
 				document.getElementById('vhost-id').value = data['id']; 
@@ -206,6 +227,17 @@
 					break;
 			}
 		}
+	}
+	function xhr(url, type, params, callback) {
+		type = type || "get";
+		var xhr = new XMLHttpRequest();
+		xhr.open(type, url);
+		xhr.onreadystatechange = function(){
+			if(this.readyState == 4 && this.status == 200){
+				callback(JSON.parse(this.responseText));
+			}
+		}
+		xhr.send(params);
 	}
 
 	</script>
@@ -304,16 +336,25 @@
 			<div><input type="text" placeholder="Name" name="vhost-web-name" class="vhost-web-config"></div>
 			<div><input type="text" placeholder="Web Address" name="vhost-web-addr" class="vhost-web-config"></div>
 			<div><input type="text" placeholder="Alternate Name" name="vhost-web-alias" class="vhost-web-config"><a id="vhost-web-add-alias" class="add-alias">+</a></div>
-			<div><input type="radio" name="vhost-web-cms" vlaue="1" class="vhost-web-config"> Drupal <input type="radio" name="vhost-web-cms" value="2" class="vhost-web-config"> Wordpress</div>
+			<div>
+				<input type="radio" name="vhost-web-cms" checked vlaue="0" class="vhost-web-config"> None 
+				<input type="radio" name="vhost-web-cms" vlaue="1" class="vhost-web-config"> Drupal 
+				<input type="radio" name="vhost-web-cms" value="2" class="vhost-web-config"> Wordpress
+			</div>
 			<button class="blue" id="save-web-vhost" value="web">Save</button>
+			<button class="blue vhost-cancel">Cancel</button>
 		</div>
 		<div class="vhost-type" id="vhost-redirect">
 			<div><input type="text" placeholder="Name" name="vhost-redirect-name" class="vhost-redirect-config"></div>
 			<div><input type="text" placeholder="Web Address" name="vhost-redirect-addr" class="vhost-redirect-config"></div>
 			<div><input type="text" placeholder="Alternate Name" name="vhost-redirect-alias" class="vhost-redirect-config"><a id="vhost-redirect-add-alias" class="add-alias">+</a></div>
 			<div><input type="text" placeholder="Redirect Address" name="vhost-redirect-redirect" class="vhost-redirect-config"></div>
-			<div><input type="radio" name="vhost-redirect-type" vlaue="1" class="vhost-redirect-config"> Permanent <input type="radio" name="vhost-redirect-type" value="2" class="vhost-redirect-config"> Temporary</div>
+			<div>
+				<input type="radio" name="vhost-redirect-type" vlaue="1" class="vhost-redirect-config"> Permanent 
+				<input type="radio" name="vhost-redirect-type" value="2" class="vhost-redirect-config"> Temporary
+			</div>
 			<button class="blue" id="save-redirect-vhost" value="redirect">Save</button>
+			<button class="blue vhost-cancel">Cancel</button>
 		</div>
 	</div>
 </div>
