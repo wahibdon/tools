@@ -156,6 +156,11 @@
 			});
 			li.addEventListener('contextmenu', function(e){
 				e.preventDefault();
+				var id = e.target.dataset.id;
+				var contextmenu = document.getElementById('vhost-rclick');
+				contextmenu.style.top = e.clientY+"px";
+				contextmenu.style.left = e.clientX+"px";
+				contextmenu.style.display = "block";
 			})
 			vhost_list.appendChild(li);
 		}
@@ -269,6 +274,7 @@
 		    border: 0;
 		    padding: 4px 8px;
 		    border-radius: 3px;
+    		border-color: cornflowerblue;
 		}
 		ul#vhost-type li.active {
 		    color: cornflowerblue;
@@ -303,6 +309,11 @@
 		}
 		ul#vhost-list li {
 			cursor: pointer;
+			border: 1px solid transparent;
+		}
+		ul#vhost-list li:hover {
+		    background-color: #ddd;
+		    border: 1px solid #ccc;
 		}
 		input {
 		    border-color: #eee;
@@ -314,6 +325,20 @@
 		button:focus, input:focus {
 		    outline-style: none;
 		    border-color: slateblue;
+		}
+		ul#vhost-rclick{
+			display: none;
+			position: absolute;
+			margin: 0;
+			padding: 0;
+			background-color: #eee
+		}
+		ul#vhost-rclick li{
+			list-style-type: none;
+			border: 1px solid #ccc;
+		}
+		ul#vhost-rclick	li:hover {
+			background-color: #ddd;
 		}
 	</style>
 </head>
@@ -358,6 +383,10 @@
 		</div>
 	</div>
 </div>
+
+<ul id="vhost-rclick">
+	<li>delete</li>
+</ul>
 
 </body>
 </html>
