@@ -70,7 +70,7 @@
 				var elem_clone = elem.parentNode.cloneNode(true);
 				elem_clone.removeChild(elem_clone.lastChild);
 				elem.parentNode.parentNode.insertBefore(elem_clone, elem.parentNode);
-				elem.value = "";
+				elem.previousElementSibling.value = "";
 			});
 		var cancel = document.getElementsByClassName('vhost-cancel');
 		for(var i=0; i<cancel.length; i++)
@@ -131,9 +131,13 @@
 	function updateVhost(){
 		var vhost_list = document.getElementById('vhost-list');
 		emptyNode(vhost_list);
-		var li;
+		var li, span;
 		for (var i=0; i<vhost.list.length; i++){
+			if (typeof vhost.list[i] == 'undefined')
+				continue;
 			li = document.createElement('li');
+			span = document.createElement('span');
+			span.appendChild(document.createTextNode('\u22EE'));
 			li.appendChild(document.createTextNode(vhost.list[i].name));
 			li.dataset.id = vhost.list[i].id;
 			li.addEventListener('click', function(e){
@@ -154,16 +158,39 @@
 				document.getElementById('vhost-window').style.display = "block";
 				switchTabs('vhost-'+kind);
 			});
-			li.addEventListener('contextmenu', function(e){
+			span.addEventListener('click', function(e){
+				window.ul = document.createElement('ul');
+				var li_delete = document.createElement('li');
+				li_delete.appendChild(document.createTextNode('delete'));
+				li_delete.addEventListener('click', function(e){
+					var id = e.target.parentNode.parentNode.parentNode.dataset.id;
+					vhost.list.splice(id, 1);
+					vhost.dirty = true;
+				})
+				ul.classList.add('vhost-options');
+				ul.appendChild(li_delete);
+				e.target.appendChild(ul);
+				document.body.addEventListener('click', vhost3Dot);
+			});
+			/*li.addEventListener('contextmenu', function(e){
 				e.preventDefault();
 				var id = e.target.dataset.id;
 				var contextmenu = document.getElementById('vhost-rclick');
 				contextmenu.style.top = e.clientY+"px";
 				contextmenu.style.left = e.clientX+"px";
 				contextmenu.style.display = "block";
-			})
+			})*/
+			li.appendChild(span);
 			vhost_list.appendChild(li);
 		}
+	}
+	function vhost3Dot(e){
+		if(e.target.nodeName != 'SPAN'){
+			ul.parentNode.removeChild(ul);
+			delete window.ul;
+			document.body.removeEventListener('click', vhost3Dot);
+		}
+
 	}
 	function removeExtraAliases(name){
 		var inputs = document.getElementsByName(name);
@@ -198,7 +225,8 @@
 		var elements = document.getElementsByName(name);
 		var values = [];
 		for (var i = 0; i < elements.length; i++) {
-			values.push(elements[i].value);
+			if(elements[i].value != "")
+				values.push(elements[i].value);
 		}
 		return values;
 	}
@@ -206,8 +234,9 @@
 		var elements = document.getElementsByName(name);
 		var dupNode;
 		while (elements.length < values.length){
-			dupNode = elements[0].clone(deep);
-			elements[0].parentNode.appendChild(dupNode);
+			dupNode = elements[elements.length-1].parentNode.cloneNode(true);
+			dupNode.removeChild(dupNode.lastChild);
+			elements[0].parentNode.parentNode.insertBefore(dupNode, elements[0].parentNode)
 		}
 		for (var i=0; i<values.length; i++)
 			elements[i].value = values[i];
@@ -310,10 +339,21 @@
 		ul#vhost-list li {
 			cursor: pointer;
 			border: 1px solid transparent;
+			height: 20px;
 		}
 		ul#vhost-list li:hover {
 		    background-color: #ddd;
 		    border: 1px solid #ccc;
+		}
+		ul#vhost-list li span {
+			padding: 0 10px;
+		    border-left: 1px solid transparent;
+		    float: right;
+		    height: 18px;
+		}
+		ul#vhost-list li span:hover {
+			border-left: 1px solid #ccc;
+			background-color: #fff
 		}
 		input {
 		    border-color: #eee;
@@ -326,18 +366,17 @@
 		    outline-style: none;
 		    border-color: slateblue;
 		}
-		ul#vhost-rclick{
-			display: none;
+		ul.vhost-options{
 			position: absolute;
 			margin: 0;
 			padding: 0;
 			background-color: #eee
 		}
-		ul#vhost-rclick li{
+		ul.vhost-options li{
 			list-style-type: none;
 			border: 1px solid #ccc;
 		}
-		ul#vhost-rclick	li:hover {
+		ul#vhost-options li:hover {
 			background-color: #ddd;
 		}
 	</style>

@@ -55,8 +55,12 @@ function loadingGif(response){
 }
 function vhost_list(response, postData){
     response.writeHead(200, {"Content-Type": "application/json"});
-    db('web_host').then(function(rows){
+    db('vhosts').then(function(rows){
         response.end(JSON.stringify(rows));
+        db('vhost_aliases').then(function(aliases){
+            console.log(rows);
+            console.log(aliases);
+        })
     });
     //response.end();
 }
